@@ -7,8 +7,9 @@ namespace ServerChatOmnicasa.Models
 {
     public class Person
     {
-        private int Id { get; set; }
-        private string Name { get; set; }
-        private string PhoneNumber { get; set; }
+        public string PersonId { get; set; }
+        public string UserId { get; set; }
+        public string CustomerId { get; set; }
+        public IEnumerable<string> PhoneNumber { get; set; }
     }
 }
