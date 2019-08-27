@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServerChatOmnicasa.Models;
-using ServerChatOmnicasa.Service;
 
 namespace ServerChatOmnicasa.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PersonsController : Controller
+    public class SendSMSController : Controller
     {
         [HttpPost] // Send SMS
         public async Task<ActionResult<InfoUserSms>> Post(InfoUserSms info)
