@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerChatOmnicasa", "ServerChatOmnicasa\ServerChatOmnicasa.csproj", "{F0447E66-89CE-454F-9DB3-7D8445D4578E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerChatOmnicasa", "ServerChatOmnicasa\ServerChatOmnicasa.csproj", "{F0447E66-89CE-454F-9DB3-7D8445D4578E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerChatOmnicasa.Data", "ServerChatOmnicasa.Data\ServerChatOmnicasa.Data.csproj", "{38BE6A21-042A-4884-AEE8-5C695EC194F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerChatOmnicasa.Logger", "ServerChatOmnicasa.Logger\ServerChatOmnicasa.Logger.csproj", "{7BCE7477-E759-45BB-96F9-8D8E308C734E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{F0447E66-89CE-454F-9DB3-7D8445D4578E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0447E66-89CE-454F-9DB3-7D8445D4578E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0447E66-89CE-454F-9DB3-7D8445D4578E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38BE6A21-042A-4884-AEE8-5C695EC194F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38BE6A21-042A-4884-AEE8-5C695EC194F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38BE6A21-042A-4884-AEE8-5C695EC194F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38BE6A21-042A-4884-AEE8-5C695EC194F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BCE7477-E759-45BB-96F9-8D8E308C734E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BCE7477-E759-45BB-96F9-8D8E308C734E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BCE7477-E759-45BB-96F9-8D8E308C734E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BCE7477-E759-45BB-96F9-8D8E308C734E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
