@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,17 +32,18 @@ namespace ServerChatOmnicasa.Data.Core
         {
             return new InfoUserSms
             {
+                Id = document[nameof(InfoUserSms.Id)].AsInt32,
                 SecretKey = document[nameof(InfoUserSms.SecretKey)].AsString,
-                PersonId = Convert.ToInt32(document[nameof(InfoUserSms.PersonId)].AsString),
-                UserId = Convert.ToInt32(document[nameof(InfoUserSms.UserId)].AsString),
-                CustomerId = Convert.ToInt32(document[nameof(InfoUserSms.CustomerId)].AsString),
+                PersonId = document[nameof(InfoUserSms.PersonId)].AsInt32,
+                UserId = document[nameof(InfoUserSms.UserId)].AsInt32,
+                CustomerId = document[nameof(InfoUserSms.CustomerId)].AsInt32,
                 PhoneNumber = document[nameof(InfoUserSms.PhoneNumber)].AsString,
-                LanguageId = Convert.ToInt32(document[nameof(InfoUserSms.LanguageId)].AsString),
-                MessageContent = document[nameof(InfoUserSms.LanguageId)].AsString,
+                LanguageId = document[nameof(InfoUserSms.LanguageId)].AsInt32,
+                MessageContent = document[nameof(InfoUserSms.MessageContent)].AsString,
                 DateSend = document[nameof(InfoUserSms.DateSend)].AsString,
-                Type = Convert.ToInt32(document[nameof(InfoUserSms.Type)].AsString),
-                IsSendSuccess = Convert.ToInt32(document[nameof(InfoUserSms.IsSendSuccess)].AsString),
-                ErrorString = document[nameof(InfoUserSms.ErrorString)].AsString
+                ErrorString = document[nameof(InfoUserSms.ErrorString)].AsString,
+                Type = document[nameof(InfoUserSms.Type)].AsInt32,
+                IsSendSuccess = document[nameof(InfoUserSms.IsSendSuccess)].AsInt32
             };
         }
 
@@ -54,6 +56,7 @@ namespace ServerChatOmnicasa.Data.Core
         {
             return new BsonDocument
             {
+                { nameof(info.Id), info.Id}, // Set Id sequence
                 { nameof(info.SecretKey), info.SecretKey},
                 { nameof(info.PersonId), info.PersonId},
                 { nameof(info.UserId), info.UserId},
@@ -61,17 +64,16 @@ namespace ServerChatOmnicasa.Data.Core
                 { nameof(info.PhoneNumber), info.PhoneNumber},
                 { nameof(info.LanguageId), info.LanguageId},
                 { nameof(info.MessageContent), info.MessageContent},
+                { nameof(info.ErrorString), info.ErrorString},
                 { nameof(info.DateSend), info.DateSend},
                 { nameof(info.Type), info.Type},
-                { nameof(info.IsSendSuccess), info.IsSendSuccess},
-                { nameof(info.ErrorString), info.ErrorString}
+                { nameof(info.IsSendSuccess), info.IsSendSuccess}
             };
         }
 
         /// <summary>
         /// Connect to MongoDb
         /// </summary>
-        /// <param name="config"></param>
         /// <param name="connectString">Connect String with MogoDB</param>
         /// <param name="datatbaseName">Database Name</param>
         public void ConnectDb(string connectString, string datatbaseName, string tableName)
@@ -128,7 +130,7 @@ namespace ServerChatOmnicasa.Data.Core
         /// <returns>List InfoUserSms</returns>
         /// <param name="keySearch">Column want sort</param>
         /// <param name="isSort">true: Ascending, false: Descending</param>
-        public async Task<List<InfoUserSms>> SortListWithValue(string keySearch, bool isSort)
+        public async Task<List<InfoUserSms>> SortListWithValue(string keySearch, bool isSort = true)
         {
             var listInfoUser = new List<InfoUserSms>();
             var sort = isSort ? Builders<BsonDocument>.Sort.Ascending(keySearch) : Builders<BsonDocument>.Sort.Descending(keySearch);
@@ -148,8 +150,13 @@ namespace ServerChatOmnicasa.Data.Core
         /// Insert Message Document on MongoDB
         /// </summary>
         /// <param name="info">Info Message</param>
-        public void InsertMessageDocument(InfoUserSms info)
+        public async void InsertMessageDocument(InfoUserSms info)
         {
+            // Set id sequence
+            var getListCollection = await GetAllCollection();
+            info.Id = getListCollection.Max(a => a.Id) + 1;
+
+            // Insert Document
             var document = DocumentInsert(info);
             _collection.InsertOne(document);
         }
