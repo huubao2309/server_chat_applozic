@@ -1,9 +1,13 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace ServerChatOmnicasa.Data.Models
 {
     public class InfoUserSms
     {
+        [BsonId]
+        public ObjectId _id { get; set; }
+
         public string SecretKey { get; set; }
 
         public int PersonId { get; set; }
@@ -16,9 +20,6 @@ namespace ServerChatOmnicasa.Data.Models
 
         public string DateSend { get; set; }
         public string ErrorString { get; set; }
-
-        // Type: 0: Send, 1: Receive
-        public int Type { get; set; }
 
         // Is Send Success: 0: Success, 1: Fail
         public int IsSendSuccess { get; set; }

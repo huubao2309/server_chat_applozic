@@ -158,7 +158,7 @@ namespace ServerChatOmnicasa.Service
                 // Save MongoDB
                 Logger?.Info($"Insert value to DB");
                 info.DateSend = ConvertDateTime.GetDateTimeNowUtc();
-                await _connect.InsertMessageDocument(info);
+                _connect.InsertMessageDocumentAsync(info);
                 Logger?.Info($"Value insert DB: {JsonConvert.SerializeObject(info)}");
             }
         }
@@ -193,7 +193,7 @@ namespace ServerChatOmnicasa.Service
                 // Save MongoDB
                 Logger?.Info($"Insert value to DB");
                 info.DateSend = ConvertDateTime.GetDateTimeNowUtc();
-                await _connect.InsertMessageDocument(info);
+                _connect.InsertMessageDocumentAsync(info);
                 Logger?.Info($"Value insert DB: {JsonConvert.SerializeObject(info)}");
             }
         }

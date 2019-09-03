@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ServerChatOmnicasa.Base;
 using ServerChatOmnicasa.Data.Models;
-using ServerChatOmnicasa.Entities;
 using ServerChatOmnicasa.Service;
 
 namespace ServerChatOmnicasa.Controllers
@@ -25,7 +24,6 @@ namespace ServerChatOmnicasa.Controllers
         public static readonly int languageId = 2;
 
         #endregion
-
         [HttpGet]
         public async Task<ActionResult> Get()
         {
@@ -60,7 +58,7 @@ namespace ServerChatOmnicasa.Controllers
             }
             catch (Exception ex)
             {
-                Logger?.Exception(ex,$"Status Code is {StatusCodes.Status500InternalServerError}");
+                Logger?.Exception(ex, $"Status Code is {StatusCodes.Status500InternalServerError}");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
             }
         }
@@ -78,25 +76,19 @@ namespace ServerChatOmnicasa.Controllers
 
                 Logger?.Info($"Info of Message {JsonConvert.SerializeObject(info)}");
                 var messageHandler = new MessageHandler();
-                if (info.Type == 0) /*Type Send*/
-                {
-                    Logger?.Info("Type of Message is Send");
+                Logger?.Info("Type of Message is Send");
 
-                    // Cancel Task after 5s
-                    TokenSource.CancelAfter(TimeSpan.FromSeconds(5));
+                //Cancel Task after 5s
+                TokenSource.CancelAfter(TimeSpan.FromSeconds(5));
 
-                    // Push Message to SMS Service
-                    var sendSuccess = await messageHandler.SendInfoMessageToSmsService(info, TokenSource.Token);
-                    Logger?.Info($"Send message is {sendSuccess.Message}");
-                    return StatusCode(StatusCodes.Status200OK);
-                }
-
-                Logger?.Info($"Status Code {StatusCodes.Status401Unauthorized}");
-                return StatusCode(StatusCodes.Status401Unauthorized, "Don't have type SMS");
+                //Push Message to SMS Service
+                var sendSuccess = await messageHandler.SendInfoMessageToSmsService(info, TokenSource.Token);
+                Logger?.Info($"Send message is {sendSuccess.Message}");
+                return StatusCode(StatusCodes.Status200OK);
             }
             catch (Exception ex)
             {
-                Logger?.Exception(ex,$"Status Code {StatusCodes.Status500InternalServerError}");
+                Logger?.Exception(ex, $"Status Code {StatusCodes.Status500InternalServerError}");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
             }
         }
