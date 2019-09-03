@@ -152,10 +152,6 @@ namespace ServerChatOmnicasa.Data.Core
         /// <param name="info">Info Message</param>
         public async Task<InfoUserSms> InsertMessageDocument(InfoUserSms info)
         {
-            // Set id sequence
-            var getListCollection = await GetAllCollection();
-            info.Id = getListCollection.Max(a => a.Id) + 1;
-
             // Insert Document
             var document = DocumentInsert(info);
             _collection.InsertOne(document);

@@ -8,8 +8,9 @@ using Newtonsoft.Json;
 using Serilog;
 using Serilog.Events;
 
-namespace ServerChatOmnicasa.Logger.Utils
+namespace ServerChatOmnicasa.Utils
 {
+
     public class ServiceLogger
     {
         #region Others

@@ -14,11 +14,11 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ServerChatOmnicasa.Data\ServerChatOmnicasa.Data.csproj" />
-    <ProjectReference Include="..\ServerChatOmnicasa.Logger\ServerChatOmnicasa.Logger.csproj" />
   </ItemGroup>
 
 </Project>

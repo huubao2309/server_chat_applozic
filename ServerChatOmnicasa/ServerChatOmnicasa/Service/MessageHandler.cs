@@ -5,11 +5,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using ServerChatOmnicasa.Base;
 using ServerChatOmnicasa.Data.Models;
 using ServerChatOmnicasa.Entities;
 using ServerChatOmnicasa.Infrastructure;
-using ServerChatOmnicasa.Logger.Utils;
+using ServerChatOmnicasa.Utils;
 
 namespace ServerChatOmnicasa.Service
 {
