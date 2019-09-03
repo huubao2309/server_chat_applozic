@@ -32,7 +32,6 @@ namespace ServerChatOmnicasa.Data.Core
         {
             return new InfoUserSms
             {
-                Id = document[nameof(InfoUserSms.Id)].AsInt32,
                 SecretKey = document[nameof(InfoUserSms.SecretKey)].AsString,
                 PersonId = document[nameof(InfoUserSms.PersonId)].AsInt32,
                 UserId = document[nameof(InfoUserSms.UserId)].AsInt32,
@@ -56,7 +55,6 @@ namespace ServerChatOmnicasa.Data.Core
         {
             return new BsonDocument
             {
-                { nameof(info.Id), info.Id}, // Set Id sequence
                 { nameof(info.SecretKey), info.SecretKey},
                 { nameof(info.PersonId), info.PersonId},
                 { nameof(info.UserId), info.UserId},

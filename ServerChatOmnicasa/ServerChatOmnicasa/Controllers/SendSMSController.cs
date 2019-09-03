@@ -76,10 +76,6 @@ namespace ServerChatOmnicasa.Controllers
                     return StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
                 }
 
-                // If Id don't have value
-                if (info.Id == 0)
-                    info.Id = -1;
-
                 Logger?.Info($"Info of Message {JsonConvert.SerializeObject(info)}");
                 var messageHandler = new MessageHandler();
                 if (info.Type == 0) /*Type Send*/

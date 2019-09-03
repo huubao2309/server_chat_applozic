@@ -4,8 +4,6 @@ namespace ServerChatOmnicasa.Data.Models
 {
     public class InfoUserSms
     {
-        public int Id { get; set; } // Auto-Increment Sequence
-
         public string SecretKey { get; set; }
 
         public int PersonId { get; set; }
