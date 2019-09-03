@@ -82,7 +82,7 @@ namespace ServerChatOmnicasa.Service
 
         #region Fields
 
-        public static readonly string SendSms_Uri = ConfigService.UriSendSms;
+        public static readonly string SendSmsUri = ConfigService.UriSendSms;
 
         private Data.Core.ConnectMongoDb _connect = new ConnectMongoDbForQuery().ConnectDbForQuery(TableName.Message.ToString());
 
@@ -123,7 +123,7 @@ namespace ServerChatOmnicasa.Service
                 {
                     httpClient.DefaultRequestHeaders.ConnectionClose = true;
                     httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Accept", "application/json");
-                    var putUriPath = SendSms_Uri
+                    var putUriPath = SendSmsUri
                                      + $"?secret-key={info.SecretKey}&customer-id={info.CustomerId}&user-id={info.UserId}&phone-number={info.PhoneNumber}&person-id={info.UserId}&language-id={info.LanguageId}";
 
                     using (var httpResponse = await httpClient.PostAsync(new Uri(putUriPath), requestContent, cancellationToken).ConfigureAwait(false))
@@ -157,7 +157,7 @@ namespace ServerChatOmnicasa.Service
             {
                 // Save MongoDB
                 Logger?.Info($"Insert value to DB");
-                info.DateSend = DateTime.Now.ToLocalTime().ToString("yyyy-MM-ddThh:mm:ss");
+                info.DateSend = ConvertDateTime.GetDateTimeNowUtc();
                 await _connect.InsertMessageDocument(info);
                 Logger?.Info($"Value insert DB: {JsonConvert.SerializeObject(info)}");
             }
@@ -192,7 +192,7 @@ namespace ServerChatOmnicasa.Service
             {
                 // Save MongoDB
                 Logger?.Info($"Insert value to DB");
-                info.DateSend = DateTime.Now.ToLocalTime().ToString("yyyy-MM-ddThh:mm:ss");
+                info.DateSend = ConvertDateTime.GetDateTimeNowUtc();
                 await _connect.InsertMessageDocument(info);
                 Logger?.Info($"Value insert DB: {JsonConvert.SerializeObject(info)}");
             }
