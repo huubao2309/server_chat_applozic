@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using CommonServiceLocator;
 using Newtonsoft.Json;
+using ServerChatOmnicasa.Base;
 using ServerChatOmnicasa.Data.Models;
 using ServerChatOmnicasa.Entities;
 using ServerChatOmnicasa.Infrastructure;
@@ -102,19 +101,19 @@ namespace ServerChatOmnicasa.Service
         #region Methods
 
         // Add Handle Message
-        public async Task<ServerResponse> SendInfoMessageToSmsService(InfoUserSms info)
+        public async Task<ServerResponse> SendInfoMessageToSmsService(InfoUserSms info, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Send Service SMS Nexmo
-            return await SendInfoMessageBySms(info);
+            return await SendInfoMessageBySms(info, cancellationToken);
         }
 
-        public async Task<bool> ReceiveInfoMessageToNexmoService(InfoUserSms info)
+        public async Task<ServerResponse> ReceiveInfoMessageToNexmoService(InfoUserSms info, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Push Notify
-            return await PushNotifyToClient(info);
+            return await PushNotifyToClient(info, cancellationToken);
         }
 
-        private async Task<ServerResponse> SendInfoMessageBySms(InfoUserSms info)
+        private async Task<ServerResponse> SendInfoMessageBySms(InfoUserSms info, CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {
@@ -130,7 +129,7 @@ namespace ServerChatOmnicasa.Service
                     var putUriPath = SendSms_Uri
                                      + $"?secret-key={info.SecretKey}&customer-id={info.CustomerId}&user-id={info.UserId}&phone-number={info.PhoneNumber}&person-id={info.UserId}&language-id={info.LanguageId}";
 
-                    using (var httpResponse = await httpClient.PostAsync(new Uri(putUriPath), requestContent).ConfigureAwait(false))
+                    using (var httpResponse = await httpClient.PostAsync(new Uri(putUriPath), requestContent, cancellationToken).ConfigureAwait(false))
                     {
                         // Convert response content to string data
                         var serverResponse = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -146,7 +145,7 @@ namespace ServerChatOmnicasa.Service
             catch (TaskCanceledException tEx)
             {
                 Debug.WriteLine(tEx);
-                info.ErrorString = tEx.ToString();
+                info.ErrorString = "Request Timeout: " + tEx;
                 info.IsSendSuccess = 1;
                 return null;
             }
@@ -160,17 +159,46 @@ namespace ServerChatOmnicasa.Service
             finally
             {
                 // Save MongoDB
-                Logger?.Info($"Insert DB: {info}");
+                Logger?.Info($"Insert value to DB");
                 info.DateSend = DateTime.Now.ToLocalTime().ToString("yyyy-MM-ddThh:mm:ss");
-                _connect.InsertMessageDocument(info);
+                await _connect.InsertMessageDocument(info);
+                Logger?.Info($"Value insert DB: {JsonConvert.SerializeObject(info)}");
             }
         }
 
-        private async Task<bool> PushNotifyToClient(InfoUserSms info)
+        private async Task<ServerResponse> PushNotifyToClient(InfoUserSms info, CancellationToken cancellationToken = default(CancellationToken))
         {
-            // Push to Firebase
-            // TODO
-            return true;
+            try
+            {
+                // Push to Firebase
+                // TODO
+                return null;
+            }
+            catch (TaskCanceledException tEx)
+            {
+                Debug.WriteLine(tEx);
+                if (!cancellationToken.IsCancellationRequested)
+                    throw;
+
+                info.ErrorString = "Request Timeout: " + tEx;
+                info.IsSendSuccess = 1;
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                info.ErrorString = ex.ToString();
+                info.IsSendSuccess = 1;
+                return null;
+            }
+            finally
+            {
+                // Save MongoDB
+                Logger?.Info($"Insert value to DB");
+                info.DateSend = DateTime.Now.ToLocalTime().ToString("yyyy-MM-ddThh:mm:ss");
+                await _connect.InsertMessageDocument(info);
+                Logger?.Info($"Value insert DB: {JsonConvert.SerializeObject(info)}");
+            }
         }
 
         #endregion

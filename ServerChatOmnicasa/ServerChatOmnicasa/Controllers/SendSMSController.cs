@@ -1,30 +1,19 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
-using CommonServiceLocator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ServerChatOmnicasa.Data.Core;
+using Newtonsoft.Json;
+using ServerChatOmnicasa.Base;
 using ServerChatOmnicasa.Data.Models;
 using ServerChatOmnicasa.Entities;
-using ServerChatOmnicasa.Infrastructure;
-using ServerChatOmnicasa.Logger.Utils;
 using ServerChatOmnicasa.Service;
-using ConnectMongoDb = ServerChatOmnicasa.Data.Core.ConnectMongoDb;
 
 namespace ServerChatOmnicasa.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SendSmsController : Controller
+    public class SendSmsController : BaseController
     {
-        public static ServiceLogger Logger { get; set; }
-
-        public SendSmsController()
-        {
-            Logger = new ServiceLogger(Config.LogPath);
-        }
-
         #region Test
 
         public static readonly string SecretKey = "jl9knq4ctrig7wqqqsmtg";
@@ -87,15 +76,22 @@ namespace ServerChatOmnicasa.Controllers
                     return StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
                 }
 
-                Logger?.Info($"Info of Message {info}");
+                // If Id don't have value
+                if (info.Id == 0)
+                    info.Id = -1;
+
+                Logger?.Info($"Info of Message {JsonConvert.SerializeObject(info)}");
                 var messageHandler = new MessageHandler();
                 if (info.Type == 0) /*Type Send*/
                 {
                     Logger?.Info("Type of Message is Send");
 
+                    // Cancel Task after 5s
+                    TokenSource.CancelAfter(TimeSpan.FromSeconds(5));
+
                     // Push Message to SMS Service
-                    var isSendSuccess = await messageHandler.SendInfoMessageToSmsService(info);
-                    Logger?.Info($"Send message is {isSendSuccess.Message}");
+                    var sendSuccess = await messageHandler.SendInfoMessageToSmsService(info, TokenSource.Token);
+                    Logger?.Info($"Send message is {sendSuccess.Message}");
                     return StatusCode(StatusCodes.Status200OK);
                 }
 

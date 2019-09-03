@@ -150,7 +150,7 @@ namespace ServerChatOmnicasa.Data.Core
         /// Insert Message Document on MongoDB
         /// </summary>
         /// <param name="info">Info Message</param>
-        public async void InsertMessageDocument(InfoUserSms info)
+        public async Task<InfoUserSms> InsertMessageDocument(InfoUserSms info)
         {
             // Set id sequence
             var getListCollection = await GetAllCollection();
@@ -159,6 +159,7 @@ namespace ServerChatOmnicasa.Data.Core
             // Insert Document
             var document = DocumentInsert(info);
             _collection.InsertOne(document);
+            return info;
         }
 
         #endregion
