@@ -1,0 +1,6 @@
+{
+  "ConnectionString": "mongodb://localhost:27017",
+  "DatabaseName": "ChatServiceDB",
+  "Hosting": "http://dev-mobileservice.omnicasa.com",
+  "Version": "1.0.0"
+}

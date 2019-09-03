@@ -1,17 +1,21 @@
-﻿using System;
-using System.IO;
-using ServerChatOmnicasa.Data.Core;
-
-namespace ServerChatOmnicasa.Entities
+﻿namespace ServerChatOmnicasa.Entities
 {
     public class Config
     {
-        // Config MongoDB
-        public static readonly string ConnectionString = "mongodb://localhost:27017";
-        public static readonly string DatabaseName = "ChatServiceDB";
+        #region Fields
 
-        // Config Log File
-        public static string CurrentServiceDirectory => Environment.CurrentDirectory;
-        public static string LogPath => Path.Combine(CurrentServiceDirectory, "Logs");
+        // Connection String of MongoDB
+        public string ConnectionString { get; set; }
+
+        // Database Name of MongoDb
+        public string DatabaseName { get; set; }
+
+        // Hosting Web API
+        public string Hosting { get; set; }
+        
+        // Version
+        public string Version { get; set; }
+
+        #endregion
     }
 }

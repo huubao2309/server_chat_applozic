@@ -7,6 +7,8 @@ namespace ServerChatOmnicasa.Base
 {
     public class BaseController : Controller
     {
+        #region Fields
+
         /// <summary>
         /// Get or set CancelTokenSource
         /// </summary>
@@ -22,9 +24,15 @@ namespace ServerChatOmnicasa.Base
         /// </summary>
         public static ServiceLogger Logger { get; set; }
 
+        #endregion
+
+        #region Initialize
+
         public BaseController()
         {
-            Logger = new ServiceLogger(Config.LogPath);
+            Logger = new ServiceLogger(ConfigService.LogPath);
         }
+
+        #endregion
     }
 }

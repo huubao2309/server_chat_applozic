@@ -26,7 +26,7 @@ namespace ServerChatOmnicasa.Utils
         #region Fields
 
         private static string _prefixLogName = "log";
-        private static string _logFolderPath { get; set; }
+        private static string LogFolderPath { get; set; }
 
         private static Serilog.Core.Logger _loggerInformation;
         private static Serilog.Core.Logger _loggerError;
@@ -40,7 +40,7 @@ namespace ServerChatOmnicasa.Utils
             if (!Directory.Exists(logFolderPath))
                 Directory.CreateDirectory(logFolderPath);
 
-            _logFolderPath = logFolderPath;
+            LogFolderPath = logFolderPath;
         }
 
         #endregion
@@ -98,7 +98,7 @@ namespace ServerChatOmnicasa.Utils
             // Create logger
             if (_loggerInformation == null)
             {
-                var loggerConfig = CreateLoggerConfiguration(Category.Info, _logFolderPath, $"{_prefixLogName}_.txt");
+                var loggerConfig = CreateLoggerConfiguration(Category.Info, LogFolderPath, $"{_prefixLogName}_.txt");
                 _loggerInformation = loggerConfig.CreateLogger();
             }
 
@@ -111,7 +111,7 @@ namespace ServerChatOmnicasa.Utils
             // Create logger
             if (_loggerError == null)
             {
-                var loggerConfig = CreateLoggerConfiguration(Category.Error, _logFolderPath, $"ex_{_prefixLogName}_.txt");
+                var loggerConfig = CreateLoggerConfiguration(Category.Error, LogFolderPath, $"ex_{_prefixLogName}_.txt");
                 _loggerError = loggerConfig.CreateLogger();
             }
 

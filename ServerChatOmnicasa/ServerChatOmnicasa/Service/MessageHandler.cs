@@ -82,9 +82,7 @@ namespace ServerChatOmnicasa.Service
 
         #region Fields
 
-        public static readonly string Hosting = "http://dev-mobileservice.omnicasa.com";
-        public static readonly string Version = "1.0.0";
-        public static readonly string SendSms_Uri = $"{Hosting}/api/{Version}/person/sms";
+        public static readonly string SendSms_Uri = ConfigService.UriSendSms;
 
         private Data.Core.ConnectMongoDb _connect = new ConnectMongoDbForQuery().ConnectDbForQuery(TableName.Message.ToString());
 
@@ -92,7 +90,7 @@ namespace ServerChatOmnicasa.Service
 
         public MessageHandler()
         {
-            Logger = new ServiceLogger(Config.LogPath);
+            Logger = new ServiceLogger(ConfigService.LogPath);
         }
 
         #endregion

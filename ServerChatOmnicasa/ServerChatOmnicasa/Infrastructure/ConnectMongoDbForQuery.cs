@@ -1,4 +1,4 @@
-﻿using ServerChatOmnicasa.Entities;
+﻿using ServerChatOmnicasa.Utils;
 
 namespace ServerChatOmnicasa.Infrastructure
 {
@@ -7,7 +7,7 @@ namespace ServerChatOmnicasa.Infrastructure
         public Data.Core.ConnectMongoDb ConnectDbForQuery(string tableName)
         {
             var connect = new Data.Core.ConnectMongoDb();
-            connect.ConnectDb(Config.ConnectionString, Config.DatabaseName, tableName);
+            connect.ConnectDb(ConfigService.Config.ConnectionString, ConfigService.Config.DatabaseName, tableName);
 
             return connect;
         }
