@@ -18,12 +18,6 @@ namespace ServerChatOmnicasa.Controllers
         {
             try
             {
-                if (info == null)
-                {
-                    Logger?.Info("Info of Message is null");
-                    return StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
-                }
-
                 Logger?.Info($"Info of Message {JsonConvert.SerializeObject(info)}");
                 var messageHandler = new MessageHandler();
                 Logger?.Info("Type of Message is Receive");

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ServerChatOmnicasa.Base;
 using ServerChatOmnicasa.Data.Models;
+using ServerChatOmnicasa.Entities;
 using ServerChatOmnicasa.Service;
 
 namespace ServerChatOmnicasa.Controllers
@@ -64,32 +65,25 @@ namespace ServerChatOmnicasa.Controllers
         }
 
         [HttpPost] // Send SMS
-        public async Task<ActionResult<InfoUserSms>> Post(InfoUserSms info)
+        public async Task<BaseResponse<object>> Post(InfoUserSms info)
         {
             try
             {
-                if (info == null)
-                {
-                    Logger?.Info("Info of Message is null");
-                    return StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
-                }
-
                 Logger?.Info($"Info of Message {JsonConvert.SerializeObject(info)}");
                 var messageHandler = new MessageHandler();
-                Logger?.Info("Type of Message is Send");
 
-                //Cancel Task after 5s
-                TokenSource.CancelAfter(TimeSpan.FromSeconds(5));
+                //Cancel Task after 3s
+                TokenSource.CancelAfter(TimeSpan.FromSeconds(3));
 
                 //Push Message to SMS Service
                 var sendSuccess = await messageHandler.SendInfoMessageToSmsService(info, TokenSource.Token);
-                Logger?.Info($"Send message is {sendSuccess.Message}");
-                return StatusCode(StatusCodes.Status200OK);
+                Logger?.Info($"Send message {JsonConvert.SerializeObject(sendSuccess)}");
+                return sendSuccess;
             }
             catch (Exception ex)
             {
                 Logger?.Exception(ex, $"Status Code {StatusCodes.Status500InternalServerError}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
+                return new BaseResponse<object>{Code = 500, Data = "Internal Server Error", Message = ex.Message, Error = ex.StackTrace};
             }
         }
     }

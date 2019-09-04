@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using ServerChatOmnicasa.Base;
 using ServerChatOmnicasa.Data.Models;
 using ServerChatOmnicasa.Entities;
 using ServerChatOmnicasa.Infrastructure;
@@ -12,7 +13,7 @@ using ServerChatOmnicasa.Utils;
 
 namespace ServerChatOmnicasa.Service
 {
-    public class MessageHandler
+    public class MessageHandler : BaseControllerHandler
     {
         //#region Test
 
@@ -98,24 +99,28 @@ namespace ServerChatOmnicasa.Service
         #region Methods
 
         // Add Handle Message
-        public async Task<ServerResponse> SendInfoMessageToSmsService(InfoUserSms info, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<BaseResponse<object>> SendInfoMessageToSmsService(InfoUserSms info, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Send Service SMS Nexmo
             return await SendInfoMessageBySms(info, cancellationToken);
         }
 
-        public async Task<ServerResponse> ReceiveInfoMessageToNexmoService(InfoUserSms info, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<BaseResponse<object>> ReceiveInfoMessageToNexmoService(InfoUserSms info, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Push Notify
             return await PushNotifyToClient(info, cancellationToken);
         }
 
-        private async Task<ServerResponse> SendInfoMessageBySms(InfoUserSms info, CancellationToken cancellationToken = default(CancellationToken))
+        private async Task<BaseResponse<object>> SendInfoMessageBySms(InfoUserSms info, CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {
                 if (string.IsNullOrEmpty(info.PhoneNumber))
-                    return null;
+                {
+                    info.ErrorString = "No Phone Number";
+                    info.IsSendSuccess = 1;
+                    return Result(info);
+                }
 
                 var requestContent = new StringContent("", Encoding.UTF8, "application/json");
 
@@ -131,11 +136,12 @@ namespace ServerChatOmnicasa.Service
                         // Convert response content to string data
                         var serverResponse = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                        // Result
-                        var data = JsonConvert.DeserializeObject<ServerResponse>(serverResponse);
-                        if (data.Message.Contains("OK")) info.IsSendSuccess = 0;
+                        if (serverResponse.Contains("OK"))
+                            info.IsSendSuccess = 1;
 
-                        return data;
+                        // Result
+                        var data = JsonConvert.DeserializeObject<object>(serverResponse);
+                        return Result(data);
                     }
                 }
             }
@@ -143,15 +149,15 @@ namespace ServerChatOmnicasa.Service
             {
                 Debug.WriteLine(tEx);
                 info.ErrorString = "Request Timeout: " + tEx;
-                info.IsSendSuccess = 1;
-                return null;
+                info.IsSendSuccess = 0;
+                return Result(info);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.ToString());
                 info.ErrorString = ex.ToString();
-                info.IsSendSuccess = 1;
-                return null;
+                info.IsSendSuccess = 0;
+                return Result(info);
             }
             finally
             {
@@ -163,7 +169,7 @@ namespace ServerChatOmnicasa.Service
             }
         }
 
-        private async Task<ServerResponse> PushNotifyToClient(InfoUserSms info, CancellationToken cancellationToken = default(CancellationToken))
+        private async Task<BaseResponse<object>> PushNotifyToClient(InfoUserSms info, CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {
@@ -178,14 +184,14 @@ namespace ServerChatOmnicasa.Service
                     throw;
 
                 info.ErrorString = "Request Timeout: " + tEx;
-                info.IsSendSuccess = 1;
+                info.IsSendSuccess = 0;
                 return null;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.ToString());
                 info.ErrorString = ex.ToString();
-                info.IsSendSuccess = 1;
+                info.IsSendSuccess = 0;
                 return null;
             }
             finally

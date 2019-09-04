@@ -21,7 +21,7 @@ namespace ServerChatOmnicasa.Data.Models
         public string DateSend { get; set; }
         public string ErrorString { get; set; }
 
-        // Is Send Success: 0: Success, 1: Fail
+        // Is Send Success: 1: Success, 0: Fail
         public int IsSendSuccess { get; set; }
     }
 }

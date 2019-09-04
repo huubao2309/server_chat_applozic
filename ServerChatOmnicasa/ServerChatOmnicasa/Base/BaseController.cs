@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using Microsoft.AspNetCore.Mvc;
-using ServerChatOmnicasa.Entities;
 using ServerChatOmnicasa.Utils;
 
 namespace ServerChatOmnicasa.Base
